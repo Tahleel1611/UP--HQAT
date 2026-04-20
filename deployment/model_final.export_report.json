@@ -1,0 +1,11 @@
+{
+  "checkpoint": "outputs_final_prod\\dropout_0.50\\cifar10\\hetero_int4_fp16\\model_state.pt",
+  "onnx_path": "deployment\\model_final.onnx",
+  "dynamic_batch": true,
+  "verify": {
+    "allclose": true,
+    "atol": 0.0001,
+    "max_abs_diff": 3.5762786865234375e-07,
+    "mean_abs_diff": 1.996755543132167e-07
+  }
+}

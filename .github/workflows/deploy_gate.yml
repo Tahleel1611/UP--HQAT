@@ -1,0 +1,52 @@
+name: Deploy Gate
+
+on:
+  pull_request:
+    branches: [ "main" ]
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  quality-and-gates:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Unit tests
+        run: |
+          pytest tests/
+
+      # Integration smoke test with deterministic, low-cost settings.
+      # Thresholds are intentionally relaxed for CI speed/stability.
+      - name: Integration smoke run (MNIST)
+        run: |
+          python scripts/run_combined_test.py \
+            --dataset mnist \
+            --epochs 1 \
+            --batch-size 64 \
+            --max-train-samples 256 \
+            --max-test-samples 128 \
+            --dropout-sweep 0.5 \
+            --hetero-ece-threshold 1.0 \
+            --max-accuracy-drop 1.0 \
+            --ece-delta-threshold 1.0 \
+            --output-dir outputs_ci
+
+      - name: Deployment gate check
+        run: |
+          python scripts/check_deployment_gates.py \
+            --summary outputs_ci/dropout_0.50/mnist/summary.json \
+            --max-accuracy-drop 1.0

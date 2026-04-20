@@ -1,0 +1,88 @@
+{
+  "config": {
+    "dataset": "cifar10",
+    "mode": "uniform_int8",
+    "epochs": 4,
+    "batch_size": 128,
+    "lr": 0.0005,
+    "num_workers": 2,
+    "seed": 42,
+    "max_train_samples": 20000,
+    "max_test_samples": 5000,
+    "output_dir": "outputs_final_prod\\dropout_0.50",
+    "mc_passes": 20,
+    "ece_bins": 15,
+    "prune_amount": 0.0,
+    "val_split": 0.1,
+    "enable_temperature_scaling": true,
+    "temperature_max_iter": 50,
+    "label_smoothing": 0.15,
+    "dropout_p": 0.5,
+    "mixup_alpha": 0.2,
+    "calibration_method": "vector",
+    "vector_max_iter": 150,
+    "enable_hetero_ft": true,
+    "hetero_ft_epochs": 3,
+    "hetero_ft_mixup_alpha": 0.05,
+    "hetero_ft_label_smoothing": 0.05,
+    "hetero_ft_lr": 0.0001
+  },
+  "precision_policy": {
+    "backbone.conv1": "int4",
+    "backbone.conv2": "int4",
+    "backbone.conv3": "int4",
+    "reliability_head.fc1": "fp16",
+    "reliability_head.fc_out": "fp16"
+  },
+  "loss_history": [
+    2.230311654138227,
+    2.092574801850826,
+    2.0243844639324973,
+    1.9806580695700138
+  ],
+  "accuracy": 0.414000004529953,
+  "ece": 0.11739908903837204,
+  "ece_raw": 0.11739908903837204,
+  "ece_calibrated": 0.01490917056798935,
+  "calibration_method": "vector",
+  "temperature": null,
+  "vector_scaler": {
+    "W": [
+      1.55087411403656,
+      1.6504526138305664,
+      1.9049909114837646,
+      1.688408374786377,
+      1.8963114023208618,
+      1.7390592098236084,
+      1.9987940788269043,
+      1.616882085800171,
+      1.767532229423523,
+      1.8109428882598877
+    ],
+    "b": [
+      0.3885738253593445,
+      -0.634548544883728,
+      0.5239465236663818,
+      0.059366513043642044,
+      0.32825857400894165,
+      0.15253448486328125,
+      -0.17437919974327087,
+      -0.053401704877614975,
+      -0.08216818422079086,
+      -0.5081260800361633
+    ]
+  },
+  "train_time_s": 88.7119777998887,
+  "peak_vram_bytes": 0,
+  "model_checkpoint_bytes": 451108,
+  "model_checkpoint_path": "outputs_final_prod\\dropout_0.50\\cifar10\\uniform_int8\\model_state.pt",
+  "model_size_bytes": 102522,
+  "zone_parameter_count": {
+    "compression_zone": 95312,
+    "reliability_zone": 7210,
+    "other": 0,
+    "total": 102522
+  },
+  "hetero_backbone_only_fake_quant": null,
+  "mc_dropout_uncertainty": null
+}

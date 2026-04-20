@@ -1,0 +1,45 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Tooling caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Environment/config secrets
+.env
+.env.*
+
+# ML artifacts
+*.pt
+*.pth
+*.onnx
+
+# Generated outputs
+outputs/
+outputs_*/
+outputs_final_prod/
+
+# Local datasets and archives
+data/
+*.tar
+*.tar.gz
+*.zip
