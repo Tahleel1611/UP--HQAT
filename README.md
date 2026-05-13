@@ -240,3 +240,50 @@ pytest
 ```
 
 The test suite covers quantization policy correctness, zone parameter counting, ECE computation, and temperature/vector scaler fitting. Test paths and the `src` import root are configured in `pyproject.toml`.
+
+---
+
+## Results
+
+All results are from the final production run on CIFAR-10 (20 000 train samples, 5 000 test samples, MC Dropout p=0.5, vector calibration).
+
+### Architecture diagram
+
+![UP-H-QAT Neural Hybrid Architecture](https://github.com/user-attachments/assets/56a6b851-a93c-4655-8728-d78b03f5535f)
+
+### Model comparison
+
+| Mode | Accuracy | Raw ECE | Calibrated ECE | Model size (bytes) | Size reduction vs FP32 | Train time (s) |
+|---|---:|---:|---:|---:|---:|---:|
+| FP32 baseline | 41.08 % | 0.1043 | 0.0162 | 410 088 | — | 113.3 |
+| Uniform INT8 QAT | 41.40 % | 0.1174 | 0.0149 | 102 522 | 75.0 % | 88.7 |
+| **Hetero INT4/FP16 (ours)** | **40.08 %** | **0.0732** | **0.0147** | **62 076** | **84.9 %** | 179.5 |
+
+The heterogeneous model achieves the best calibrated ECE and the smallest footprint, at a cost of only 1.0 percentage-point accuracy relative to FP32.
+
+### Deployment gate results
+
+| Gate | Value | Target | Pass |
+|---|---:|---:|:---:|
+| Size reduction vs FP32 | 84.86 % | ≥ 70 % | ✅ |
+| Calibration delta vs FP32 | −0.00145 | ≤ 0.03 | ✅ |
+| Absolute calibrated ECE | 0.01471 | ≤ 0.02 | ✅ |
+| Accuracy drop vs FP32 | 1.00 pp | < 2 pp | ✅ |
+| **Overall** | — | — | **✅ PASS** |
+
+### MC Dropout uncertainty (heterogeneous model)
+
+| Metric | Value |
+|---|---:|
+| Mean predictive entropy | 1.7639 |
+| Mean confidence | 0.3261 |
+
+### Edge benchmark (ONNX, CPU, batch size 1)
+
+| Metric | Value |
+|---|---:|
+| Latency P50 | 0.117 ms |
+| Latency P99 | 0.223 ms |
+| Mean latency | 0.124 ms |
+| Peak RSS memory | 292.7 MB |
+| Max abs diff (PyTorch vs ONNX) | 4.77 × 10⁻⁷ |
